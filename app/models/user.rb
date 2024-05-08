@@ -101,9 +101,38 @@ class User < ApplicationRecord
   ## Indirect associations
 
   # User#liked_photos: returns rows from the photos table associated to this user through its likes
+  has_many(:liked_photos, through: :likes, source: :photo)
+  # def liked_photos
+  #   my_likes = self.likes
+    
+  #   array_of_photo_ids = Array.new
+
+  #   my_likes.each do |a_like|
+  #     array_of_photo_ids.push(a_like.photo_id)
+  #   end
+
+  #   matching_photos = Photo.where({ :id => array_of_photo_ids })
+
+  #   return matching_photos
+  # end
 
   # User#commented_photos: returns rows from the photos table associated to this user through its comments
+  has_many(:commented_photos, through: :comments, source: photo)
+  # def commented_photos
+  #   my_comments = self.comments
+    
+  #   array_of_photo_ids = Array.new
 
+  #   my_comments.each do |a_comment|
+  #     array_of_photo_ids.push(a_comment.photo_id)
+  #   end
+
+  #   matching_photos = Photo.where({ :id => array_of_photo_ids })
+
+  #   unique_matching_photos = matching_photos.distinct
+
+  #   return unique_matching_photos
+  # end
 
   ### Indirect associations built on scoped associations
 
@@ -119,35 +148,9 @@ class User < ApplicationRecord
   
 
 
-  def liked_photos
-    my_likes = self.likes
-    
-    array_of_photo_ids = Array.new
+ 
 
-    my_likes.each do |a_like|
-      array_of_photo_ids.push(a_like.photo_id)
-    end
-
-    matching_photos = Photo.where({ :id => array_of_photo_ids })
-
-    return matching_photos
-  end
-
-  def commented_photos
-    my_comments = self.comments
-    
-    array_of_photo_ids = Array.new
-
-    my_comments.each do |a_comment|
-      array_of_photo_ids.push(a_comment.photo_id)
-    end
-
-    matching_photos = Photo.where({ :id => array_of_photo_ids })
-
-    unique_matching_photos = matching_photos.distinct
-
-    return unique_matching_photos
-  end
+  
 
   
   
