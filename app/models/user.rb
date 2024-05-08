@@ -147,18 +147,6 @@ class User < ApplicationRecord
 
   
 
-
- 
-
-  
-
-  
-  
-
-  
-
-  
-
   def followers
     my_accepted_received_follow_requests = self.accepted_received_follow_requests
     
