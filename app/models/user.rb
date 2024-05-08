@@ -22,7 +22,7 @@ class User < ApplicationRecord
   ## Direct associations
 
   # User#comments: returns rows from the comments table associated to this user by the author_id column
-  belongs_to(:comments, class_name: "Comment", foreign_key: "author_id")
+  has_many(:comments, class_name: "Comment", foreign_key: "author_id")
   # def comments
   #   my_id = self.id
 
@@ -33,7 +33,7 @@ class User < ApplicationRecord
 
 
   # User#own_photos: returns rows from the photos table  associated to this user by the owner_id column
-  belongs_to(:own_photos, class_name: "Photo", foreign_key: "owner_id")
+  has_many(:own_photos, class_name: "Photo", foreign_key: "owner_id")
   # def own_photos
   #   my_id = self.id
 
@@ -43,7 +43,7 @@ class User < ApplicationRecord
   # end
 
   # User#likes: returns rows from the likes table associated to this user by the fan_id column
-  belongs_to(:likes, class_name: "Like", foreign_key: "fan_id")
+  has_many(:likes, class_name: "Like", foreign_key: "fan_id")
   # def likes
   #   my_id = self.id
 
@@ -54,7 +54,7 @@ class User < ApplicationRecord
 
 
   # User#sent_follow_requests: returns rows from the follow requests table associated to this user by the sender_id column
-  belongs_to(:sent_follow_requests, class_name: "FollowRequest", foreign_key: "sender_id")
+  has_many(:sent_follow_requests, class_name: "FollowRequest", foreign_key: "sender_id")
   # def sent_follow_requests
   #   my_id = self.id
 
@@ -65,7 +65,7 @@ class User < ApplicationRecord
 
 
   # User#received_follow_requests: returns rows from the follow requests table associated to this user by the recipient_id column
-  belongs_to(:received_follow_requests, class_name: "FollowRequest", foreign_key: "recipient_id")
+  has_many(:received_follow_requests, class_name: "FollowRequest", foreign_key: "recipient_id")
   # def received_follow_requests
   #   my_id = self.id
 
@@ -74,12 +74,28 @@ class User < ApplicationRecord
   #   return matching_follow_requests
   # end
 
-  
+
   ### Scoped direct associations
 
   # User#accepted_sent_follow_requests: returns rows from the follow requests table associated to this user by the sender_id column, where status is 'accepted'
+  has_many(:accepted_sent_follow_requests, -> { where status: "accepted" }, class_name: "FollowRequest", foreign_key: :sender_id)
+  # def accepted_sent_follow_requests
+  #   my_sent_follow_requests = self.sent_follow_requests
+
+  #   matching_follow_requests = my_sent_follow_requests.where({ :status => "accepted" })
+
+  #   return matching_follow_requests
+  # end
 
   # User#accepted_received_follow_requests: returns rows from the follow requests table associated to this user by the recipient_id column, where status is 'accepted'
+  has_many(:accepted_received_follow_requests, -> { where status: "accepted" }, class_name: "FollowRequest", foreign_key: :recipient_id)
+  # def accepted_received_follow_requests
+  #   my_received_follow_requests = self.received_follow_requests
+
+  #   matching_follow_requests = my_received_follow_requests.where({ :status => "accepted" })
+
+  #   return matching_follow_requests
+  # end
 
 
   ## Indirect associations
@@ -136,21 +152,9 @@ class User < ApplicationRecord
   
   
 
-  def accepted_sent_follow_requests
-    my_sent_follow_requests = self.sent_follow_requests
+  
 
-    matching_follow_requests = my_sent_follow_requests.where({ :status => "accepted" })
-
-    return matching_follow_requests
-  end
-
-  def accepted_received_follow_requests
-    my_received_follow_requests = self.received_follow_requests
-
-    matching_follow_requests = my_received_follow_requests.where({ :status => "accepted" })
-
-    return matching_follow_requests
-  end
+  
 
   def followers
     my_accepted_received_follow_requests = self.accepted_received_follow_requests
