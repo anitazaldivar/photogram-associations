@@ -22,16 +22,59 @@ class User < ApplicationRecord
   ## Direct associations
 
   # User#comments: returns rows from the comments table associated to this user by the author_id column
+  belongs_to(:comments, class_name: "Comment", foreign_key: "author_id")
+  # def comments
+  #   my_id = self.id
+
+  #   matching_comments = Comment.where({ :author_id => my_id })
+
+  #   return matching_comments
+  # end
+
 
   # User#own_photos: returns rows from the photos table  associated to this user by the owner_id column
+  belongs_to(:own_photos, class_name: "Photo", foreign_key: "owner_id")
+  # def own_photos
+  #   my_id = self.id
+
+  #   matching_photos = Photo.where({ :owner_id => my_id })
+
+  #   return matching_photos
+  # end
 
   # User#likes: returns rows from the likes table associated to this user by the fan_id column
+  belongs_to(:likes, class_name: "Like", foreign_key: "fan_id")
+  # def likes
+  #   my_id = self.id
+
+  #   matching_likes = Like.where({ :fan_id => my_id })
+
+  #   return matching_likes
+  # end
+
 
   # User#sent_follow_requests: returns rows from the follow requests table associated to this user by the sender_id column
+  belongs_to(:sent_follow_requests, class_name: "FollowRequest", foreign_key: "sender_id")
+  # def sent_follow_requests
+  #   my_id = self.id
+
+  #   matching_follow_requests = FollowRequest.where({ :sender_id => my_id })
+
+  #   return matching_follow_requests
+  # end
+
 
   # User#received_follow_requests: returns rows from the follow requests table associated to this user by the recipient_id column
+  belongs_to(:received_follow_requests, class_name: "FollowRequest", foreign_key: "recipient_id")
+  # def received_follow_requests
+  #   my_id = self.id
 
+  #   matching_follow_requests = FollowRequest.where({ :recipient_id => my_id })
 
+  #   return matching_follow_requests
+  # end
+
+  
   ### Scoped direct associations
 
   # User#accepted_sent_follow_requests: returns rows from the follow requests table associated to this user by the sender_id column, where status is 'accepted'
@@ -56,29 +99,9 @@ class User < ApplicationRecord
 
   # User#discover: returns rows from the photos table associated to this user through its leaders (the leaders' liked_photos)
 
-  def comments
-    my_id = self.id
 
-    matching_comments = Comment.where({ :author_id => my_id })
+  
 
-    return matching_comments
-  end
-
-  def own_photos
-    my_id = self.id
-
-    matching_photos = Photo.where({ :owner_id => my_id })
-
-    return matching_photos
-  end
-
-  def likes
-    my_id = self.id
-
-    matching_likes = Like.where({ :fan_id => my_id })
-
-    return matching_likes
-  end
 
   def liked_photos
     my_likes = self.likes
@@ -110,21 +133,8 @@ class User < ApplicationRecord
     return unique_matching_photos
   end
 
-  def sent_follow_requests
-    my_id = self.id
-
-    matching_follow_requests = FollowRequest.where({ :sender_id => my_id })
-
-    return matching_follow_requests
-  end
-
-  def received_follow_requests
-    my_id = self.id
-
-    matching_follow_requests = FollowRequest.where({ :recipient_id => my_id })
-
-    return matching_follow_requests
-  end
+  
+  
 
   def accepted_sent_follow_requests
     my_sent_follow_requests = self.sent_follow_requests
